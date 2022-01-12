@@ -70,7 +70,6 @@ export default {
   methods: {
     async getProductList() {
       this.productList = await this.$api('/api/productList2', {});
-      console.log(this.productList);
     },
     goToInsert() {
       this.$router.push({ path: '/create' });

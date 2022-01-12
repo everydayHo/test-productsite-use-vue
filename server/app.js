@@ -3,6 +3,13 @@ const app = express();
 const session = require('express-session');
 const fs = require('fs');
 
+// const cors = require('cors');
+
+// let corsOption = {
+//   origin: 'http://localhost:8081', // 허락하는 요청 주소
+//   credentials: true, // true로 하면 설정한 내용을 response 헤더에 추가 해줍니다.
+// };
+
 app.use(
   session({
     secret: 'secret code',
@@ -63,6 +70,53 @@ app.post('/api/login', async (request, res) => {
 app.post('/api/logout', async (request, res) => {
   request.session.destroy();
   res.send('ok');
+});
+
+app.post('/upload/:productId/:type/:fileName', async (request, res) => {
+  let { productId, type, fileName } = request.params;
+  const dir = `${__dirname}/uploads/${productId}`;
+  const file = `${dir}/${fileName}`;
+  if (!request.body.data)
+    return fs.unlink(file, async (err) =>
+      res.send({
+        err,
+      })
+    );
+  const data = request.body.data.slice(
+    request.body.data.indexOf(';base64,') + 8
+  );
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+  fs.writeFile(file, data, 'base64', async (error) => {
+    await req.db('productImageInsert', [
+      {
+        product_id: productId,
+        type: type,
+        path: fileName,
+      },
+    ]);
+
+    if (error) {
+      res.send({
+        error,
+      });
+    } else {
+      res.send('ok');
+    }
+  });
+});
+
+app.get('/download/:productId/:fileName', (request, res) => {
+  const { productId, type, fileName } = request.params;
+  const filepath = `${__dirname}/uploads/${productId}/${fileName}`;
+  res.header(
+    'Content-Type',
+    `image/${fileName.substring(fileName.lastIndexOf('.'))}`
+  );
+  if (!fs.existsSync(filepath))
+    res.send(404, {
+      error: 'Can not found file.',
+    });
+  else fs.createReadStream(filepath).pipe(res);
 });
 
 //클라이언트쪽에서 데이터 요청이 들어올 때

@@ -13,6 +13,14 @@ export default {
         })
       ).data;
     },
+
+    $base64(file) {
+      return new Promise((resolve) => {
+        var a = new FileReader();
+        a.onload = (e) => resolve(e.target.result);
+        a.readAsDataURL(file);
+      });
+    },
     $currencyFormat(value, format = '#,###') {
       if (value == 0 || value == null) return 0;
 

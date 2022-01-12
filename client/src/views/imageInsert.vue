@@ -1,3 +1,7 @@
+Skip to content seungwongo / dev_dignity Public Code Issues Pull requests
+Actions Projects Wiki More dev_dignity/products/client/src/views/ImageInsert.vue
+@seungwongo seungwongo change cors History 1 contributor 163 lines (160 sloc)
+5.67 KB
 <template>
   <main class="mt-3">
     <div class="container">
@@ -159,7 +163,7 @@ export default {
   created() {
     this.productId = this.$route.query.product_id;
     this.getProductDetail();
-    // this.getProductImage();
+    this.getProductImage();
   },
   mounted() {
     if (this.user.email !== undefined) {
@@ -179,47 +183,47 @@ export default {
         this.productDetail = productDetail[0];
       }
     },
-    // async getProductImage() {
-    //   this.productImage = await this.$api('/api/imageList', {
-    //     param: [this.productId],
-    //   });
-    //   console.log('this.productImage', this.productImage);
-    // },
-    // deleteImage(id) {
-    //   this.$swal
-    //     .fire({
-    //       title: '정말 삭제 하시겠습니까?',
-    //       showCancelButton: true,
-    //       confirmButtonText: `삭제`,
-    //       cancelButtonText: `취소`,
-    //     })
-    //     .then(async (result) => {
-    //       if (result.isConfirmed) {
-    //         await this.$api('/api/imageDelete', { param: [id] });
-    //         this.getProductImage();
-    //         this.$swal.fire('삭제되었습니다!', '', 'success');
-    //       }
-    //     });
-    // },
-    // async uploadFile(files, type) {
-    //   let name = '';
-    //   let data = null;
-    //   if (files) {
-    //     name = files[0].name;
-    //     data = await this.$base64(files[0]);
-    //   }
-    //   const { error } = await this.$api(
-    //     `/upload/${this.productId}/${type}/${name}`,
-    //     { data }
-    //   );
-    //   if (error) {
-    //     return this.$swal('이미지 업로드 실패했습니다. 다시 시도하세요.');
-    //   }
-    //   this.$swal('이미지가 업로드 되었습니다.');
-    //   setTimeout(() => {
-    //     this.getProductImage();
-    //   }, 1000);
-    // },
+    async getProductImage() {
+      this.productImage = await this.$api('/api/imageList', {
+        param: [this.productId],
+      });
+      console.log('this.productImage', this.productImage);
+    },
+    deleteImage(id) {
+      this.$swal
+        .fire({
+          title: '정말 삭제 하시겠습니까?',
+          showCancelButton: true,
+          confirmButtonText: `삭제`,
+          cancelButtonText: `취소`,
+        })
+        .then(async (result) => {
+          if (result.isConfirmed) {
+            await this.$api('/api/imageDelete', { param: [id] });
+            this.getProductImage();
+            this.$swal.fire('삭제되었습니다!', '', 'success');
+          }
+        });
+    },
+    async uploadFile(files, type) {
+      let name = '';
+      let data = null;
+      if (files) {
+        name = files[0].name;
+        data = await this.$base64(files[0]);
+      }
+      const { error } = await this.$api(
+        `/upload/${this.productId}/${type}/${name}`,
+        { data }
+      );
+      if (error) {
+        return this.$swal('이미지 업로드 실패했습니다. 다시 시도하세요.');
+      }
+      this.$swal('이미지가 업로드 되었습니다.');
+      setTimeout(() => {
+        this.getProductImage();
+      }, 1000);
+    },
   },
 };
 </script>

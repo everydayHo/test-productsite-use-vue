@@ -20,12 +20,10 @@ module.exports = {
     query: `select * from t_image where product_id = ? and type = 2 `,
   },
   productInsert: {
-    query: `insert into t_product(product_name, product_price, delivery_price, add_delivery_price, tags, outbound_days, seller_id, category_id)
-    values(?, ?, ?, ?, ?, ?, ?, ?)`,
+    query: `insert into t_product set ?`,
   },
   productImageInsert: {
-    query: `insert into t_image(product_id, type, path)
-    values (?, ?, ?)`,
+    query: `insert into t_image set ?`,
   },
   imageList: {
     query: `select * from t_image where product_id=?`,
@@ -35,6 +33,9 @@ module.exports = {
   },
   productDelete: {
     query: `delete from t_product where id=?`,
+  },
+  categoryList: {
+    query: `select * from t_category`,
   },
   sellerList: {
     query: `select * from t_seller`,
