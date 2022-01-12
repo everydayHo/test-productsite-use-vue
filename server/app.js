@@ -15,6 +15,12 @@ app.use(
   })
 );
 
+app.use(
+  express.json({
+    limit: '500mb',
+  })
+);
+
 const server = app.listen(3000, () => {
   console.log('Sever Started. port 3000');
 });
@@ -49,7 +55,7 @@ app.post('/api/logout', async (request, res) => {
 
 app.post('/api/:alias', async (request, res) => {
   try {
-    res.send(await req.db(request.params.alias));
+    res.send(await req.db(request.params.alias, request.body.param));
   } catch (err) {
     res.status(500).send({
       error: err,
@@ -61,7 +67,7 @@ app.post('/apirole/:alias', async (request, res) => {
     return res.status(401).send({ error: '로그인하세요' });
   }
   try {
-    res.send(await req.db(request.params.alias));
+    res.send(await req.db(request.params.alias, request.body.param));
   } catch (err) {
     res.status(500).send({
       error: err,
