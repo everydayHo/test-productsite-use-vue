@@ -43,9 +43,9 @@ fs.watchFile(__dirname + '/sql.js', (curr, prev) => {
 const db = {
   database: 'dev',
   connectionLimit: 10,
-  host: '172.30.1.2',
+  host: '',
   user: 'root',
-  password: 'mariadb',
+  password: '',
 };
 const dbPool = require('mysql').createPool(db);
 
